@@ -1,4 +1,4 @@
-from flask import Flask, request,render_template
+from flask import Flask, request
 import time
 
 app = Flask(__name__)
@@ -7,25 +7,12 @@ sent_time = 0
 
 @app.route("/")
 def hello_world():
-    return render_template("index.html")
+    return "It is up :)" 
 
 @app.route("/get/testing/time",methods=["GET"])
 def get_time(): 
 
     return str(round(time.time()))
-
-@app.route("/post/testing/receiver_start",methods=["POST"])
-def post_receiver_start(): 
-    global sent_time
-    request_data = request.get_json()
-
-    host_name = request_data["host_name"]
-
-    connected = request_data["connected"]
-
-    print("Stat connection\nHost name: {}\nConnected {}\n".format(host_name,connected))
-
-    return ""
 
 @app.route("/post/testing/sender",methods=["POST"])
 def post_sender(): 
