@@ -1,69 +1,31 @@
-from flask import Flask, request
-import time
 
-app = Flask(__name__)
+from get_handlers import handleIndex,handleCalibration
+from post_handlers import handleSender,handleReceiver
 
-sent_time = 0
+from flask import Flask
+from flask_socketio import SocketIO
 
-receivers = {}
+import os
 
-test = [1,2,3,4,5]
+template_path = os.getcwd() + "/templates"
+APP = Flask(__name__,template_folder=template_path)
 
-sum(test)
+APP.add_url_rule("/","handleIndex",handleIndex,methods=["GET"])
 
-@app.route("/")
-def hello_world():
-    return "It is up :)" 
+APP.add_url_rule("/post/testing/sender","handleSender",handleSender,methods=["POST"])
 
-@app.route("/get/calibration/diff_time/<host_name>",methods=["GET"])
-def get_time(host_name): 
+APP.add_url_rule("/post/testing/receiver","handleReceiver",handleReceiver,methods=["POST"])
 
-    difference_in_times = receivers[host_name]
+APP.add_url_rule("/get/calibration/diff_time/<host_name>","handleCalibration",handleCalibration,methods=["GET"])
 
-    average_difference = sum(difference_in_times)/len(difference_in_times)
 
-    return str(average_difference) 
+socketio = SocketIO(APP)
 
-@app.route("/post/testing/sender",methods=["POST"])
-def post_sender(): 
-    global sent_time
-    request_data = request.get_json()
+def handleConnection(data):
+	print("Hello World")
+	
 
-    request_number = request_data["request_number"]
-
-    pie_time = request_data["internal_time"]
-    sent_time = pie_time
-    print()
-
-    print("Sent signal\nReq num: {}\nTime: {}".format(request_number,pie_time))
-
-    return ""
-
-@app.route("/post/testing/receiver",methods=["POST"])
-def post_receiver():
-    global sent_time, receivers
-    request_data = request.get_json()
-
-    host_name = request_data["host_name"]
-
-    pie_time = request_data["internal_time"]
-
-    signal_strength= request_data["signal_strength"]
-
-    diff_time_ns = pie_time - sent_time  
-
-    diff_time_ms = diff_time_ns / 1000000.0
-
-    if host_name in receivers.keys():
-        receivers[host_name].append(diff_time_ns)
-    else:
-        receivers[host_name] = [diff_time_ns]
-
-    print()
-    print("Host Name: {}\nPie Time: {}\nDiff Time ms: {}\nSignal Strength db:{}\n".format(host_name,pie_time,diff_time_ms,signal_strength))
-
-    return "" 
-
+socketio.on_event("connect",handleConnection)
 
 if __name__ == "__main__":
-    app.run()
+	socketio.run(APP)

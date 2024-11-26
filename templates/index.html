@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Flask WebSocket Example</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+	<script>
+
+		function fullScreenCanvas(canvas) {
+			canvas.width = window.innerWidth
+
+			canvas.height = window.innerHeight
+
+		}
+
+
+		document.addEventListener('DOMContentLoaded', (event) => {
+			socket.on('connect', function () {
+				console.log('Connected to server');
+			});
+			socket.on('message', function (msg) {
+				console.log('Message received: ' + msg);
+			});
+
+			socket.on('disconnect', function () {
+				console.log('Disconnected from server');
+			});
+		});
+
+	</script>
+
+	<style>
+		html,
+		body {
+			overflow: hidden;
+			height: 100%;
+			width: 100%;
+			margin: 0 !important;
+			padding: 0 !important;
+		}
+	</style>
+
+</head>
+
+<body>
+	<canvas id="ips_canvas">
+	</canvas>
+
+	<script>
+
+		var socket = io();
+		const canvas = document.getElementById("ips_canvas")
+		const basis_width = 1707
+		const basis_height = 791
+
+		const ctx = canvas.getContext("2d")
+
+		fullScreenCanvas(canvas)
+
+		let canvas_width = canvas.width
+		let canvas_height = canvas.height
+
+		console.log(`${canvas_width}:${canvas_height}`)
+
+		function clear_canvas(ctx) {
+			ctx.fillStyle = "rgb(255,255,255)"
+			ctx.fillRect(0, 0, canvas_width, canvas_height)
+		}
+		clear_canvas(ctx)
+
+		window.addEventListener("resize", () => {
+			fullScreenCanvas(canvas)
+			clear_canvas(ctx)
+		})
+
+
+	</script>
+</body>
+
+</html>
