@@ -19,7 +19,6 @@ def handleReceiver():
         RECEIVERS[host_name].append(diff_time_ns)
     else:
         RECEIVERS[host_name] = [diff_time_ns]
-    print(RECEIVERS)
     print()
     print("Host Name: {}\nPie Time: {}\nDiff Time ms: {}\nSignal Strength db:{}\n".format(host_name,pie_time,diff_time_ms,signal_strength))
 

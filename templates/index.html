@@ -7,25 +7,17 @@
 	<script>
 
 		function fullScreenCanvas(canvas) {
-			canvas.width = window.innerWidth
+			canvas.width = window.innerWidth / 2
 
-			canvas.height = window.innerHeight
+			canvas.height = window.innerHeight / 2
 
 		}
 
+		function clear_canvas(canvas, ctx) {
+			ctx.fillStyle = "rgb(255,255,255)"
+			ctx.fillRect(0, 0, canvas.width, canvas.height)
+		}
 
-		document.addEventListener('DOMContentLoaded', (event) => {
-			socket.on('connect', function () {
-				console.log('Connected to server');
-			});
-			socket.on('message', function (msg) {
-				console.log('Message received: ' + msg);
-			});
-
-			socket.on('disconnect', function () {
-				console.log('Disconnected from server');
-			});
-		});
 
 	</script>
 
@@ -38,39 +30,87 @@
 			margin: 0 !important;
 			padding: 0 !important;
 		}
+
+		#main_container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		#button_row {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+
+		}
 	</style>
 
 </head>
 
 <body>
-	<canvas id="ips_canvas">
-	</canvas>
+	<div id="main_container">
+		<canvas id="ips_canvas">
+		</canvas>
+		<br>
+		<div id="button_row">
+			<button id="make_manual_scan_btn">Make manual scan</button>
+
+			<button id="make_automatic_scan_btn">Make automatic scan</button>
+
+		</div>
+	</div>
+
 
 	<script>
 
 		var socket = io();
 		const canvas = document.getElementById("ips_canvas")
-		const basis_width = 1707
-		const basis_height = 791
+		const manual_scan_btn = document.getElementById("make_manual_scan_btn")
+		manual_scan_btn.addEventListener("click", () => {
+			socket.emit("make manual scan", "")
+		})
+
+		const automatic_scan_btn = document.getElementById("make_automatic_scan_btn")
+		automatic_scan_btn.addEventListener("click", () => {
+			socket.emit("make automatic scan", "")
+		})
+
+		const basis_width = 1707 / 2
+		const basis_height = 791 / 2
+
+		let px_x_diff = (window.innerWidth / 2) / basis_width
+		let px_y_diff = (window.innerHeight / 2) / basis_height
 
 		const ctx = canvas.getContext("2d")
 
 		fullScreenCanvas(canvas)
 
-		let canvas_width = canvas.width
-		let canvas_height = canvas.height
+		let room_width = (285 * px_x_diff) / 2
+		let room_height = (570 * px_y_diff) / 2
 
-		console.log(`${canvas_width}:${canvas_height}`)
+		clear_canvas(canvas, ctx)
 
-		function clear_canvas(ctx) {
-			ctx.fillStyle = "rgb(255,255,255)"
-			ctx.fillRect(0, 0, canvas_width, canvas_height)
+		function draw_room_outline(canvas, ctx) {
+			let x1 = canvas.width / 2 - room_width / 2
+
+			let y1 = canvas.height / 2 - room_height / 2
+
+			ctx.strokeRect(x1, y1, room_width, room_height)
 		}
-		clear_canvas(ctx)
+
+		draw_room_outline(canvas, ctx)
 
 		window.addEventListener("resize", () => {
 			fullScreenCanvas(canvas)
-			clear_canvas(ctx)
+			clear_canvas(canvas, ctx)
+
+			px_x_diff = (window.innerWidth / 2) / basis_width
+			px_y_diff = (window.innerHeight / 2) / basis_height
+
+			room_width = (285 * px_x_diff) / 2
+			room_height = (570 * px_y_diff) / 2
+
+			draw_room_outline(canvas, ctx)
 		})
 
 
