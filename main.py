@@ -21,8 +21,6 @@ APP.add_url_rule("/post/testing/sender","handleSender",handleSender,methods=["PO
 
 APP.add_url_rule("/post/testing/receiver","handleReceiver",handleReceiver,methods=["POST"])
 
-APP.add_url_rule("/post/testing/receiver","handleReceiver",handleReceiver,methods=["POST"])
-
 APP.add_url_rule("/post/testing/receiver/start","handleStartupReceiver",handleStartupReceiver,methods=["POST"])
 
 APP.add_url_rule("/post/testing/sender/start","handleStartupSender",handleStartupSender,methods=["POST"])

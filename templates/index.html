@@ -85,8 +85,33 @@
 
 		fullScreenCanvas(canvas)
 
-		let room_width = (285 * px_x_diff) / 2
-		let room_height = (570 * px_y_diff) / 2
+		const REAL_ROOM_WIDTH = 556
+		const REAL_ROOM_HEIGHT = 375
+
+
+		let room_width = (REAL_ROOM_WIDTH * px_x_diff) / 2
+		let room_height = (REAL_ROOM_HEIGHT * px_y_diff) / 2
+
+		class Pie {
+			constructor(name, x, y, rgb_color, distance) {
+				this.name = name
+				this.real_x = x
+
+				this.real_y = y
+				this.x = this.real_x * px_x_diff / 2
+				this.y = this.real_y * px_y_diff / 2
+				this.rgb_color = rgb_color
+				this.distance = distance
+			}
+			update_x_y() {
+				this.x = this.real_x * px_x_diff / 2
+				this.y = this.real_y * px_y_diff / 2
+			}
+
+		}
+
+		let PIES = [new Pie("pie4", 0, 0, [125, 125, 255], 20), new Pie("pie2", REAL_ROOM_WIDTH, 0, [255, 125, 125], 20), new Pie("pie3", 335, REAL_ROOM_HEIGHT, [125, 255, 125], 20)]
+
 
 		clear_canvas(canvas, ctx)
 
@@ -97,20 +122,72 @@
 
 			ctx.strokeRect(x1, y1, room_width, room_height)
 		}
+		function draw_cirlce(x, y, r, color, ctx) {
+			ctx.beginPath();
+			ctx.arc(x, y, r, 0, 2 * Math.PI);
+			ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`;
 
-		draw_room_outline(canvas, ctx)
+			ctx.lineWidth = 1
+			ctx.strokeStyle = `rgb(0,0,0)`;
+			ctx.fill();
+			ctx.stroke();
+		}
 
-		window.addEventListener("resize", () => {
+		function draw_circle_outline(x, y, r, color, ctx) {
+			ctx.beginPath();
+			ctx.arc(x, y, r, 0, 2 * Math.PI);
+			ctx.lineWidth = 4
+			ctx.strokeStyle = `rgb(${color[0]},${color[1]},${color[2]})`;
+			ctx.stroke();
+		}
+		function draw_all() {
+
 			fullScreenCanvas(canvas)
 			clear_canvas(canvas, ctx)
+
+
 
 			px_x_diff = (window.innerWidth / 2) / basis_width
 			px_y_diff = (window.innerHeight / 2) / basis_height
 
-			room_width = (285 * px_x_diff) / 2
-			room_height = (570 * px_y_diff) / 2
+			room_width = (REAL_ROOM_WIDTH * px_x_diff) / 2
+			room_height = (REAL_ROOM_HEIGHT * px_y_diff) / 2
+
+			let x1 = canvas.width / 2 - room_width / 2
+
+			let y1 = canvas.height / 2 - room_height / 2
 
 			draw_room_outline(canvas, ctx)
+
+			for (let i = 0; i < PIES.length; i++) {
+				PIES[i].update_x_y()
+				let pie = PIES[i]
+				console.log(pie)
+
+				draw_cirlce(pie.x + x1, pie.y + y1, 20, pie.rgb_color, ctx)
+
+				draw_circle_outline(pie.x + x1, pie.y + y1, pie.distance / 2 + 20, pie.rgb_color, ctx)
+			}
+		}
+
+		draw_room_outline(canvas, ctx)
+
+		draw_all()
+		window.addEventListener("resize", () => {
+			draw_all()
+
+		})
+		socket.on("reception", (value) => {
+			let real_val = JSON.parse(value)
+			for (let i = 0; i < PIES.length; i++) {
+				let pie = PIES[i]
+				if (pie.name == real_val.host_name) {
+					PIES[i].distance = real_val.distance * -1
+				}
+
+			}
+			draw_all()
+
 		})
 
 
