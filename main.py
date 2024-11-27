@@ -6,6 +6,8 @@ from flask_socketio import SocketIO
 
 from websocket_handlers import handleConnection,handleManualScan,handleAutomaticScan
 
+from Trilateration import CalculateDistance, Trilateration
+
 will_list = ["asbjorn","william","martin","josephine","MUSHIN"]
 
 will_req_num = 0
@@ -43,6 +45,36 @@ socketio.on_event("connect",handleConnection)
 socketio.on_event("make manual scan",handleManualScan)
 
 socketio.on_event("make automatic scan",handleAutomaticScan)
+
+
+@APP.route("/post/trilateration", methods=["POST"])
+def handle_trilateration():
+    import json
+    from flask import request
+    
+    # Parse incoming data (assume it's JSON with RSSI and transmitter details)
+    data = request.get_json()
+    if not data or 'sniffers' not in data or 'tx_power' not in data:
+        return {"error": "Invalid input"}, 400
+
+    tx_power = data['tx_power']
+    sniffers = data['sniffers']  # Each sniffer should have x, y, rssi
+
+    # Calculate distances for each sniffer
+    points = []
+    for sniffer in sniffers:
+        distance = CalculateDistance(sniffer['rssi'], tx_power)
+        points.append({'x': sniffer['x'], 'y': sniffer['y'], 'distance': distance})
+
+    # Perform trilateration
+    if len(points) < 3:
+        return {"error": "At least three sniffers are required"}, 400
+
+    try:
+        x, y = Trilateration(points)
+        return {"x": x, "y": y}
+    except Exception as e:
+        return {"error": str(e)}, 500
 
 
 if __name__ == "__main__":
