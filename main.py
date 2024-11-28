@@ -11,6 +11,7 @@ will_list = ["asbjorn","william","martin","josephine","MUSHIN"]
 will_req_num = 0
 
 import os
+import numpy as np
 
 template_path = os.getcwd() + "/templates"
 APP = Flask(__name__,template_folder=template_path)
@@ -44,6 +45,33 @@ socketio.on_event("make manual scan",handleManualScan)
 
 socketio.on_event("make automatic scan",handleAutomaticScan)
 
+def handle_trilateration():
+    import json
+    from flask import request
+    
+    # Parse incoming data (assume it's JSON with RSSI and transmitter details)
+    data = request.get_json()
+    if not data or 'sniffers' not in data or 'tx_power' not in data:
+        return {"error": "Invalid input"}, 400
+
+    tx_power = data['tx_power']
+    sniffers = data['sniffers']  # Each sniffer should have x, y, rssi
+
+    # Calculate distances for each sniffer
+    A = np.empty(len(sniffers), 3) # Define matrix with sniffer values in each row
+    for sniffer in range(len(sniffers)):
+        distance = CalculateDistance(sniffer['rssi'], tx_power)
+        A[sniffer, :] = [sniffers[sniffer]["x"], sniffers[sniffer]["y"], distance]
+
+    # Perform trilateration
+    if len(A) < 3:
+        return {"error": "At least three sniffers are required"}, 400
+
+    try:
+        x, y = trilaterate(A)
+        return {"x": x, "y": y}
+    except Exception as e:
+        return {"error": str(e)}, 500
 
 if __name__ == "__main__":
 	socketio.run(APP)
