@@ -12,6 +12,7 @@ will_req_num = 0
 
 import os
 import numpy as np
+import trilateration2 as trl
 
 template_path = os.getcwd() + "/templates"
 APP = Flask(__name__,template_folder=template_path)
@@ -60,7 +61,7 @@ def handle_trilateration():
     # Calculate distances for each sniffer
     A = np.empty(len(sniffers), 3) # Define matrix with sniffer values in each row
     for sniffer in range(len(sniffers)):
-        distance = CalculateDistance(sniffer['rssi'], tx_power)
+        distance = trl.CalculateDistance(sniffer['rssi'], tx_power)
         A[sniffer, :] = [sniffers[sniffer]["x"], sniffers[sniffer]["y"], distance]
 
     # Perform trilateration
@@ -68,10 +69,14 @@ def handle_trilateration():
         return {"error": "At least three sniffers are required"}, 400
 
     try:
-        x, y = trilaterate(A)
+        x, y = trl.LSM_solve(A)
         return {"x": x, "y": y}
     except Exception as e:
         return {"error": str(e)}, 500
+    
+S = np.random.rand(3,2)
+trl.trilaterate(S)
+
 
 if __name__ == "__main__":
 	socketio.run(APP)
