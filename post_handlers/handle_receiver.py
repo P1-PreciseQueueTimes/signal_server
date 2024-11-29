@@ -5,6 +5,12 @@ from flask_socketio import emit
 
 import json
 
+#Test Function
+def rssi_to_distance(rssi, A = -40, n = 3):
+    #Basic Path Loss Model
+    return 10**((A - rssi) / (10 * n))
+
+
 def handleReceiver():
     global SENT_TIME, RECEIVERS 
     request_data = request.get_json()
@@ -28,10 +34,13 @@ def handleReceiver():
 
     average_signal_strength = sum(RECEIVERS[host_name])/len(RECEIVERS[host_name])
 
-    print()
-    print("Host Name: {}\nPie Time: {}\nDiff Time ms: {}\nSignal Strength db:{}\nAverage Signal Strength:{}\n".format(host_name,pie_time,diff_time_ms,signal_strength,average_signal_strength))
+    #Test again
+    distance = rssi_to_distance(average_signal_strength)
 
-    out_obj = {"host_name":host_name,"distance":signal_strength}
+    print()
+    print("Host Name: {}\nPie Time: {}\nDiff Time ms: {}\nSignal Strength db:{}\nAverage Signal Strength:{}\nCalibrated Distance{}\n".format(host_name,pie_time,diff_time_ms,signal_strength,average_signal_strength,distance))
+
+    out_obj = {"host_name":host_name,"distance":distance}
 
     out_obj_str = json.dumps(out_obj)
 
