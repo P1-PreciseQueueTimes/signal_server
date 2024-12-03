@@ -76,8 +76,8 @@ def match_fingerprint(RECEIVERS):
         min_error = float("inf")
         for fingerprint in fingerprints:
             rssi_values = fingerprint["rssi_values"]
-            error = np.linalg.norm([
-                RECEIVERS[k][-1] -  sum(rssi_values[k])/len(rssi_values[k]) for k in RECEIVERS.keys()])
+            sum_mean = sum([(abs(RECEIVERS[k][-1]) -  abs(sum(rssi_values[k]))/len(rssi_values[k]))**2 for k in RECEIVERS.keys()])
+            error = sum_mean/len(RECEIVERS.keys())
             if error < min_error:
                 min_error = error
                 best_match = fingerprint["location"]
