@@ -14,8 +14,13 @@ will_req_num = 0
 
 import os
 
+
+static_path = os.getcwd() + "/static"
+static_url = ""
+
 template_path = os.getcwd() + "/templates"
-APP = Flask(__name__,template_folder=template_path)
+
+APP = Flask(__name__,template_folder=template_path,static_folder=static_path,static_url_path=static_url)
 
 APP.add_url_rule("/","handleIndex",handleIndex,methods=["GET"])
 
