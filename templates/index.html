@@ -37,7 +37,7 @@
 			align-items: center;
 		}
 
-		#button_row {
+		.row_row {
 			display: flex;
 			flex-direction: row;
 			align-items: center;
@@ -49,13 +49,24 @@
 
 <body>
 	<div id="main_container">
+		<h1 id="calibration_holder"></h1>
 		<canvas id="ips_canvas">
 		</canvas>
 		<br>
-		<div id="button_row">
+		<div id="input_row" class="row_row">
+			<label for="x_cordinate">X:</label>
+			<input name="x_cordinate" id="x_cordinate">
+			<label for="y_cordinate">Y:</label>
+			<input name="y_cordinate" id="y_cordinate">
+		</div>
+		<div id="button_row" class="row_row">
 			<button id="make_manual_scan_btn">Make manual scan</button>
 
 			<button id="make_automatic_scan_btn">Make automatic scan</button>
+
+			<button id="toggle_calibration_btn">Toggle calibrate</button>
+
+			<button id="reset_receivers_btn">Reset receivers</button>
 
 		</div>
 	</div>
@@ -66,13 +77,48 @@
 		var socket = io();
 		const canvas = document.getElementById("ips_canvas")
 		const manual_scan_btn = document.getElementById("make_manual_scan_btn")
+		const toggle_calibration_btn = document.getElementById("toggle_calibration_btn")
+
+		const reset_receivers_btn = document.getElementById("reset_receivers_btn")
+
+		const calibration_holder = document.getElementById("calibration_holder")
+
 		manual_scan_btn.addEventListener("click", () => {
-			socket.emit("make manual scan", "")
+			let test_x = document.getElementById("x_cordinate").value
+
+			let test_y = document.getElementById("y_cordinate").value
+
+			out_obj = {
+				x: test_x,
+				y: test_y
+			}
+			console.log(out_obj)
+
+			out_str = JSON.stringify(out_obj)
+
+			console.log(out_str)
+
+			socket.emit("make manual scan", out_str)
 		})
 
 		const automatic_scan_btn = document.getElementById("make_automatic_scan_btn")
 		automatic_scan_btn.addEventListener("click", () => {
 			socket.emit("make automatic scan", "")
+		})
+		reset_receivers_btn.addEventListener("click", async () => {
+
+			relative_path = "/post/testing/reset_receivers"
+			const resp = await fetch(relative_path)
+		})
+
+		toggle_calibration_btn.addEventListener("click", async () => {
+			relative_path = "/post/testing/calibrate"
+
+			const resp = await fetch(relative_path)
+
+			let resp_msg = await resp.json()
+			calibration_holder.innerHTML = `Calibration mode set to ${resp_msg.mode}`
+
 		})
 
 		const basis_width = 1707 / 2

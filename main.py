@@ -1,10 +1,12 @@
 from get_handlers import handleIndex
-from post_handlers import handleSender,handleReceiver,handleStartupSender,handleStartupReceiver
-
-from flask import Flask
+from flask import Flask, json 
 from flask_socketio import SocketIO
-
+from post_handlers.handle_receiver import init_fingerprint_db
 from websocket_handlers import handleConnection,handleManualScan,handleAutomaticScan
+from post_handlers import handleSender,handleReceiver,handleStartupSender,handleStartupReceiver
+import misc_elements
+
+init_fingerprint_db()
 
 will_list = ["asbjorn","william","martin","josephine","MUSHIN"]
 
@@ -24,6 +26,19 @@ APP.add_url_rule("/post/testing/receiver","handleReceiver",handleReceiver,method
 APP.add_url_rule("/post/testing/receiver/start","handleStartupReceiver",handleStartupReceiver,methods=["POST"])
 
 APP.add_url_rule("/post/testing/sender/start","handleStartupSender",handleStartupSender,methods=["POST"])
+
+
+@APP.route("/post/testing/reset_receivers", methods=["GET"])  
+def ResetReceivers():
+    misc_elements.RECEIVERS = {}
+    print("Reset receivers")
+    return ""
+
+@APP.route("/post/testing/calibrate", methods=["GET"])  
+def ToggleCalibrate():
+    misc_elements.CALIBRATION_MODE = not misc_elements.CALIBRATION_MODE
+    print(f"Set calibrate to {misc_elements.CALIBRATION_MODE}")
+    return json.dumps({"mode":misc_elements.CALIBRATION_MODE}) 
 
 @APP.route("/get/testing/esp32",methods=["GET"])
 def handle_esp32_test():
