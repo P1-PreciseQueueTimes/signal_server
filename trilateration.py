@@ -3,7 +3,7 @@ from scipy.optimize import minimize
 import math
 #distances = np.array([5.1, 5.0, 3.1])
 
-def lns(pos1,pos2,pos3,distances):
+def lns(distances):
     """takes 3 positions in that are arrays and an array with the distances"""
     locations = np.array([
             [0, 0],  # P1
@@ -36,9 +36,9 @@ def calculateLNS(locations, distances, initial_guess):
             'maxiter': 1e+7      # Maximum iterations
         })
     location = result.x
-    print(f"{location[0]}, {location[1]}")
+    print(f"\nX:{location[0]}\nY:{location[1]}\n")
 
-lns(1,2,3,np.array([5.1, 5.0, 3.1]))
+#lns(1,2,3,np.array([5.1, 5.0, 3.1]))
 
 """
 distances = np.array([5.1, 5.0, 3.1])
