@@ -8,10 +8,10 @@ def CalculateDistance(rssi, tx_power, n=2):
 
 
 
-def Trilateration(points):
-    x1, y1, d1 = points[0]['x'], points[0]['y'], points[0]['distance']
-    x2, y2, d2 = points[1]['x'], points[1]['y'], points[1]['distance']
-    x3, y3, d3 = points[2]['x'], points[2]['y'], points[2]['distance']
+def Trilateration(points,distances):
+    x1, y1, d1 = points[0][0], points[0][1], distances[0] #array is 0=x, 1=y
+    x2, y2, d2 = points[1][0], points[1][1], distances[1]
+    x3, y3, d3 = points[2][0], points[2][1], distances[2]
     A = 2 * (x2 - x1) ; B = 2 * (y2 - y1) 
     C = d1 ** 2 - d2 ** 2 - x1 ** 2 + x2 ** 2 - y1 ** 2 + y2 ** 2
     D = 2 * (x3 - x2) ; E = 2 * (y3 - y2)
