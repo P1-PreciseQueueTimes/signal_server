@@ -1,0 +1,5 @@
+def CalculateDistance(rssi, tx_power=39, n=2):
+    return 10 ** ((tx_power - rssi) / (10 * n))
+
+
+      
