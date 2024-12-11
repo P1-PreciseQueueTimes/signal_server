@@ -41,7 +41,22 @@ manual_scan_btn.addEventListener("click", () => {
 
 const automatic_scan_btn = document.getElementById("make_automatic_scan_btn")
 automatic_scan_btn.addEventListener("click", () => {
-	socket.emit("make automatic scan", "")
+
+	let test_x = document.getElementById("x_cordinate").value
+
+	let test_y = document.getElementById("y_cordinate").value
+
+	out_obj = {
+		x: test_x,
+		y: test_y
+	}
+	console.log(out_obj)
+
+	out_str = JSON.stringify(out_obj)
+
+	console.log(out_str)
+
+	socket.emit("make automatic scan", out_str)
 })
 reset_receivers_btn.addEventListener("click", async () => {
 
@@ -69,8 +84,8 @@ const ctx = canvas.getContext("2d")
 
 fullScreenCanvas(canvas)
 
-const REAL_ROOM_WIDTH = 556
-const REAL_ROOM_HEIGHT = 375
+const REAL_ROOM_WIDTH = 1200 
+const REAL_ROOM_HEIGHT = 1200 
 
 
 let room_width = (REAL_ROOM_WIDTH * px_x_diff) / 2
@@ -94,7 +109,7 @@ class Pie {
 
 }
 
-let PIES = [new Pie("pie4", 0, 0, [125, 125, 255], 20), new Pie("pie2", REAL_ROOM_WIDTH, 0, [255, 125, 125], 20), new Pie("pie3", 335, REAL_ROOM_HEIGHT, [125, 255, 125], 20)]
+let PIES = [new Pie("pie4", 0, REAL_ROOM_WIDTH, [125, 125, 255], 20), new Pie("pie2", REAL_ROOM_WIDTH/2, REAL_ROOM_HEIGHT, [255, 125, 125], 20), new Pie("pie3", 0, 0, [125, 255, 125], 20)]
 
 
 clear_canvas(canvas, ctx)
@@ -150,7 +165,7 @@ function draw_all() {
 
 		draw_cirlce(pie.x + x1, pie.y + y1, 20, pie.rgb_color, ctx)
 
-		draw_circle_outline(pie.x + x1, pie.y + y1, pie.distance / 2 + 20, pie.rgb_color, ctx)
+		draw_circle_outline(pie.x + x1, pie.y + y1, pie.distance / 2, pie.rgb_color, ctx)
 	}
 }
 
@@ -166,7 +181,7 @@ socket.on("reception", (value) => {
 	for (let i = 0; i < PIES.length; i++) {
 		let pie = PIES[i]
 		if (pie.name == real_val.host_name) {
-			PIES[i].distance = real_val.distance * -1
+			PIES[i].distance = real_val.distance 
 		}
 
 	}

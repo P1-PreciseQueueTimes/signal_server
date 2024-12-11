@@ -18,7 +18,10 @@ def save_fingerprint(location, RECEIVERS):
         for data_index in range(len(file_json)):
             if file_json[data_index]["location"][0] == location[0] and file_json[data_index]["location"][1] == location[1]:
                 for k,v in RECEIVERS.items():
-                    file_json[data_index]["rssi_values"][k].append(v[-1])
+                    if k in file_json[data_index]["rssi_values"].keys():
+                        file_json[data_index]["rssi_values"][k].append(v[-1])
+                    else:
+                        file_json[data_index]["rssi_values"][k] = [v[-1]]
                 location_exists = True
         if not location_exists:
             data_out = {

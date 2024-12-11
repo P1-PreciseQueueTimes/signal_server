@@ -16,7 +16,14 @@ def handleManualScan(msg):
 
 	emit("manual scan","lol",broadcast=True)
 
-def handleAutomaticScan(_):
+def handleAutomaticScan(msg):
+	print(msg)
+
+	json_data = json.loads(msg)
+
+	misc_elements.Test_x = int(json_data["x"])
+
+	misc_elements.Test_y = int(json_data["y"])
 
 	print("made automatic scan")
 

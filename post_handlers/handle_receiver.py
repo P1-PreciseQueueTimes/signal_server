@@ -33,7 +33,8 @@ def handleReceiver():
     ))
 
     if len(misc_elements.RECEIVERS) == 3:  # When all sniffers report
-        """
+
+        signal_measurement.lns([signal_measurement.calc_distance_reg(misc_elements.RECEIVERS[i][-1]) for i in misc_elements.RECEIVERS.keys()])
         if misc_elements.CALIBRATION_MODE:
             # Save fingerprint during calibration
             location = [misc_elements.Test_x,misc_elements.Test_y] 
@@ -42,6 +43,7 @@ def handleReceiver():
             signal_measurement.save_fingerprint(location, misc_elements.RECEIVERS)
             print(f"Calibration data saved for location: {location}")
             misc_elements.RECEIVERS = {}  # Reset for next calibration
+
         else:
             # Always use fingerprint matching for localization
             estimated_position = signal_measurement.match_fingerprint(misc_elements.RECEIVERS)
@@ -50,11 +52,7 @@ def handleReceiver():
                 emit("position_update", {"x": estimated_position[0], "y": estimated_position[1]}, broadcast=True,namespace="/")
             else:
                 print("Error: No matching fingerprint found.")
-            misc_elements.RECEIVERS = {}  # Reset for next calculation
-        """
-        signal_measurement.lns([signal_measurement.calc_distance_reg(misc_elements.RECEIVERS[i][-1]) for i in misc_elements.RECEIVERS.keys()])
 
-        misc_elements.RECEIVERS = {}  # Reset for next calibration
 
 
 
