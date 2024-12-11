@@ -1,6 +1,6 @@
 
 
-
+FINGERPRINT_DB = "fingerprint_db.json"
 
 SENT_TIME = 0
 

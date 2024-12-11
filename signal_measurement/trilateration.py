@@ -7,8 +7,8 @@ def lns(distances):
     """takes 3 positions in that are arrays and an array with the distances"""
     locations = np.array([
             [0, 0],  # P1
-            [6, 0],  # P2
-            [3, 7]   # P3
+            [1200, 0],  # P2
+            [600, 1200]   # P3
     ])
     initial_guess = np.mean(locations, axis=0)
     calculateLNS(locations, distances, initial_guess)
@@ -37,6 +37,9 @@ def calculateLNS(locations, distances, initial_guess):
         })
     location = result.x
     print(f"\nX:{location[0]}\nY:{location[1]}\n")
+
+def calc_distance_reg(rssi):
+    return math.exp(-0.1339046599*rssi+ 2.363818961)
 
 #lns(1,2,3,np.array([5.1, 5.0, 3.1]))
 

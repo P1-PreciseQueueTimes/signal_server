@@ -1,7 +1,7 @@
 from get_handlers import handleIndex
 from flask import Flask, json 
 from flask_socketio import SocketIO
-from post_handlers.handle_receiver import init_fingerprint_db
+from signal_measurement import init_fingerprint_db
 from websocket_handlers import handleConnection,handleManualScan,handleAutomaticScan
 from post_handlers import handleSender,handleReceiver,handleStartupSender,handleStartupReceiver
 import misc_elements
