@@ -1,4 +1,6 @@
 
+from classes.receiver import Receiver
+
 
 FINGERPRINT_DB = "fingerprint_db.json"
 
@@ -6,7 +8,7 @@ First_received_time = 0
 
 Last_received_time = 0
 
-RECEIVERS =  {} 
+RECEIVERS =  [Receiver("pie2"),Receiver("pie3"),Receiver("pie4")] 
 
 Test_x = 0 
 

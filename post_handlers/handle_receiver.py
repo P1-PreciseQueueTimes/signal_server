@@ -1,9 +1,6 @@
-from time import time
 from flask import request
 from flask_socketio import emit
 import json
-from flask import request
-from flask_socketio import emit
 
 import misc_elements
 import signal_measurement
@@ -20,17 +17,14 @@ def handleReceiver():
     mac_adress = request_data["mac_adress"]
 
 
-    if host_name not in misc_elements.RECEIVERS.keys():
-        misc_elements.RECEIVERS[host_name] = [signal_strength]
-    else:
-        misc_elements.RECEIVERS[host_name].append(signal_strength)
+    this_receiver = [receiver for receiver in misc_elements.RECEIVERS if receiver.host_name == host_name][0]
 
-    average_signal_strength = sum(misc_elements.RECEIVERS[host_name]) / len(misc_elements.RECEIVERS[host_name])
+
 
     distance = signal_measurement.calc_distance_reg(signal_strength)
 
-    print("Host Name: {}\nMac adress: {}\nPie Time: {}\nSignal Strength db:{}\nAverage Signal Strength:{}\nDistance: {}\n".format(
-        host_name,mac_adress, pie_time,signal_strength,  average_signal_strength,distance
+    print("Host Name: {}\nMac adress: {}\nPie Time: {}\nSignal Strength db:{}\nDistance: {}\n".format(
+        host_name,mac_adress, pie_time,signal_strength,  distance
     ))
 
 
