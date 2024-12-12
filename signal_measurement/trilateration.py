@@ -3,16 +3,6 @@ from scipy.optimize import minimize
 import math
 #distances = np.array([5.1, 5.0, 3.1])
 
-def lns(distances):
-    """takes 3 positions in that are arrays and an array with the distances"""
-    locations = np.array([
-            [0, 0],  # P1
-            [1200, 0],  # P2
-            [600, 1200]   # P3
-    ])
-    initial_guess = np.mean(locations, axis=0)
-    calculateLNS(locations, distances, initial_guess)
-
 def euclidean_distance(x1, y1, x2, y2):
     p1 = np.array((x1 ,y1))
     p2 = np.array((x2, y2))
@@ -25,6 +15,17 @@ def mse(x, locations, distances): #Funktion that calculates errors/squares
         mse += math.pow(distance_calculated - distance, 2.0)
     return mse / len(distances)
 
+def lns(distances):
+    """takes 3 positions in that are arrays and an array with the distances"""
+    locations = np.array([
+            [0, 0],  # P1
+            [1200, 0],  # P2
+            [600, 1200]   # P3
+    ])
+    initial_guess = np.mean(locations, axis=0)
+    return calculateLNS(locations, distances, initial_guess)
+
+
 def calculateLNS(locations, distances, initial_guess):
     result = minimize(
         mse,                         # The error function
@@ -36,7 +37,8 @@ def calculateLNS(locations, distances, initial_guess):
             'maxiter': 1e+7      # Maximum iterations
         })
     location = result.x
-    print(f"\nX:{location[0]}\nY:{location[1]}\n")
+
+    return location
 
 def calc_distance_reg(rssi):
     return math.exp(-0.1339046599*rssi+ 2.363818961)

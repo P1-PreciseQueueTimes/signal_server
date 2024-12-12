@@ -1,3 +1,4 @@
+from time import time
 from flask import request
 from flask_socketio import emit
 import json
@@ -32,9 +33,16 @@ def handleReceiver():
         host_name,mac_adress, pie_time,signal_strength,  average_signal_strength,distance
     ))
 
+
     if len(misc_elements.RECEIVERS) == 3:  # When all sniffers report
 
-        signal_measurement.lns([signal_measurement.calc_distance_reg(misc_elements.RECEIVERS[i][-1]) for i in misc_elements.RECEIVERS.keys()])
+        trilateration_location = signal_measurement.lns([signal_measurement.calc_distance_reg(misc_elements.RECEIVERS[i][-1]) for i in misc_elements.RECEIVERS.keys()])
+        misc_elements.Tri_x_diff.append(misc_elements.Test_x - trilateration_location[0])
+
+        misc_elements.Tri_y_diff.append(misc_elements.Test_y - trilateration_location[1])
+
+        print(f"Trilateration cordinates: ({trilateration_location[0],trilateration_location[1]})\nAverage difference: ({sum(misc_elements.Tri_x_diff)/len(misc_elements.Tri_x_diff)},{sum(misc_elements.Tri_y_diff)/len(misc_elements.Tri_y_diff)})\n")
+
         if misc_elements.CALIBRATION_MODE:
             # Save fingerprint during calibration
             location = [misc_elements.Test_x,misc_elements.Test_y] 
@@ -52,9 +60,6 @@ def handleReceiver():
                 emit("position_update", {"x": estimated_position[0], "y": estimated_position[1]}, broadcast=True,namespace="/")
             else:
                 print("Error: No matching fingerprint found.")
-
-
-
 
 
     # Emit the filtered signal to the clients

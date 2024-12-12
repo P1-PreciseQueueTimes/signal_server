@@ -1,8 +1,8 @@
 
 function fullScreenCanvas(canvas) {
-	canvas.width = window.innerWidth / 2
+	canvas.width = window.innerWidth / 1.5
 
-	canvas.height = window.innerHeight / 2
+	canvas.height = window.innerHeight / 1.5
 
 }
 
@@ -73,9 +73,10 @@ toggle_calibration_btn.addEventListener("click", async () => {
 	calibration_holder.innerHTML = `Calibration mode set to ${resp_msg.mode}`
 
 })
+const ratio = 4
 
-const basis_width = 1707 / 2
-const basis_height = 791 / 2
+const basis_width = 1707 / 2 
+const basis_height = 791 / 2 
 
 let px_x_diff = (window.innerWidth / 2) / basis_width
 let px_y_diff = (window.innerHeight / 2) / basis_height
@@ -88,8 +89,8 @@ const REAL_ROOM_WIDTH = 1200
 const REAL_ROOM_HEIGHT = 1200 
 
 
-let room_width = (REAL_ROOM_WIDTH * px_x_diff) / 2
-let room_height = (REAL_ROOM_HEIGHT * px_y_diff) / 2
+let room_width = (REAL_ROOM_WIDTH * px_x_diff) / ratio
+let room_height = (REAL_ROOM_HEIGHT * px_y_diff) / ratio
 
 class Pie {
 	constructor(name, x, y, rgb_color, distance) {
@@ -97,27 +98,27 @@ class Pie {
 		this.real_x = x
 
 		this.real_y = y
-		this.x = this.real_x * px_x_diff / 2
-		this.y = this.real_y * px_y_diff / 2
+		this.x = this.real_x * px_x_diff / ratio
+		this.y = this.real_y * px_y_diff / ratio 
 		this.rgb_color = rgb_color
 		this.distance = distance
 	}
 	update_x_y() {
-		this.x = this.real_x * px_x_diff / 2
-		this.y = this.real_y * px_y_diff / 2
+		this.x = this.real_x * px_x_diff / ratio
+		this.y = this.real_y * px_y_diff / ratio
 	}
 
 }
 
-let PIES = [new Pie("pie4", 0, REAL_ROOM_WIDTH, [125, 125, 255], 20), new Pie("pie2", REAL_ROOM_WIDTH/2, REAL_ROOM_HEIGHT, [255, 125, 125], 20), new Pie("pie3", 0, 0, [125, 255, 125], 20)]
+let PIES = [new Pie("pie4", REAL_ROOM_WIDTH, 0, [125, 125, 255], 20), new Pie("pie2", REAL_ROOM_WIDTH/2, REAL_ROOM_HEIGHT, [255, 125, 125], 20), new Pie("pie3", 0, 0, [125, 255, 125], 20)]
 
 
 clear_canvas(canvas, ctx)
 
 function draw_room_outline(canvas, ctx) {
-	let x1 = canvas.width / 2 - room_width / 2
+	let x1 = canvas.width / 2 - room_width / ratio
 
-	let y1 = canvas.height / 2 - room_height / 2
+	let y1 = canvas.height / 2- room_height / ratio
 
 	ctx.strokeRect(x1, y1, room_width, room_height)
 }
@@ -149,12 +150,12 @@ function draw_all() {
 	px_x_diff = (window.innerWidth / 2) / basis_width
 	px_y_diff = (window.innerHeight / 2) / basis_height
 
-	room_width = (REAL_ROOM_WIDTH * px_x_diff) / 2
-	room_height = (REAL_ROOM_HEIGHT * px_y_diff) / 2
+	room_width = (REAL_ROOM_WIDTH * px_x_diff) / ratio
+	room_height = (REAL_ROOM_HEIGHT * px_y_diff) / ratio
 
-	let x1 = canvas.width / 2 - room_width / 2
+	let x1 = canvas.width / 2 - room_width / ratio
 
-	let y1 = canvas.height / 2 - room_height / 2
+	let y1 = canvas.height / 2 - room_height / ratio
 
 	draw_room_outline(canvas, ctx)
 
