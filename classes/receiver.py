@@ -6,7 +6,8 @@ class Signal:
         self.time_received = time_received
         pass
 class Receiver:
-    def __init__(self,host_name) -> None:
+    def __init__(self,host_name,cordinates) -> None:
+        self.cordinates = cordinates
         self.host_name = host_name
         self.signals:list[Signal] = [] 
         pass

@@ -15,13 +15,9 @@ def mse(x, locations, distances): #Funktion that calculates errors/squares
         mse += math.pow(distance_calculated - distance, 2.0)
     return mse / len(distances)
 
-def lns(distances):
+def lns(locations,distances):
     """takes 3 positions in that are arrays and an array with the distances"""
-    locations = np.array([
-            [0, 0],  # P1
-            [1200, 0],  # P2
-            [600, 1200]   # P3
-    ])
+    locations = np.array(locations)
     initial_guess = np.mean(locations, axis=0)
     return calculateLNS(locations, distances, initial_guess)
 

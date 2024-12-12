@@ -4,11 +4,9 @@ from classes.receiver import Receiver
 
 FINGERPRINT_DB = "fingerprint_db.json"
 
-First_received_time = 0
+CENTER = (1200/2,1200/2)  
 
-Last_received_time = 0
-
-RECEIVERS =  [Receiver("pie2"),Receiver("pie3"),Receiver("pie4")] 
+RECEIVERS =  [Receiver("pie2",[0,0]),Receiver("pie3",[1200,0]),Receiver("pie4",[600,1200])] 
 
 Test_x = 0 
 

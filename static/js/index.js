@@ -16,6 +16,7 @@ var socket = io();
 const canvas = document.getElementById("ips_canvas")
 const manual_scan_btn = document.getElementById("make_manual_scan_btn")
 const toggle_calibration_btn = document.getElementById("toggle_calibration_btn")
+const people_counter 0 document.getElementById("people_counter")
 
 const reset_receivers_btn = document.getElementById("reset_receivers_btn")
 
@@ -186,6 +187,13 @@ socket.on("reception", (value) => {
 		}
 
 	}
+	let people = real_val.people
+	people_counter.innerHTML = `People: ${people}`
 	draw_all()
+
+	for (let i = 0; i< real_val.people_locations.length;i++) {
+		draw_cirlce(real_val.people_locations[i][0]*px_x_diff/ratio, real_val.people_locations[i][1]*px_y_diff/ratio, 5, [0,0,255], ctx)
+	}
+
 
 })
