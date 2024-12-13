@@ -67,7 +67,7 @@ def handle_esp32_test():
             chosen_ride = ride
 
     if not chosen_ride:
-        return "0"
+        return "No people"
 
 
     queue_time = chosen_ride.calculate_queue_time(misc_elements.People_In_Area)
