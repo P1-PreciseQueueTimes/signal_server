@@ -1,5 +1,6 @@
 
-from classes.receiver import Receiver
+from classes import Receiver, Ride
+
 
 
 FINGERPRINT_DB = "fingerprint_db.json"
@@ -19,5 +20,14 @@ Tri_y_diff =[]
 CALIBRATION_MODE = True 
 
 People_In_Area = 0
+
+# Defining our Rides with their data so we can calculate Flow Rate
+rides = [
+    Ride(name="Dragekongen", wait_time_minutes=3.5, people_per_ride=28),
+    Ride(name="Piraten", wait_time_minutes=2.31, people_per_ride=2.341463415), 
+    Ride(name="Skatteøen", wait_time_minutes=3, people_per_ride=32)
+]
+
+chosen_ride = "Piraten"
 
 

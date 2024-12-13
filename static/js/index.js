@@ -1,4 +1,41 @@
 
+var socket = io();
+const canvas = document.getElementById("ips_canvas")
+const manual_scan_btn = document.getElementById("make_manual_scan_btn")
+const toggle_calibration_btn = document.getElementById("toggle_calibration_btn")
+const people_counter = document.getElementById("people_counter")
+const ride_dropdown= document.getElementById("ride_dropdown")
+const ride_button = document.getElementById("ride_select")
+
+ride_button.addEventListener("click",async () => {
+	let value = ride_dropdown.value
+	console.log(value)
+	const resp = await fetch ("/post/testing/ride", {
+		headers: {
+			"Content-Type": "application/json",
+		},
+		method: "POST",
+		body: JSON.stringify({ value: value  }),
+	});
+
+})
+
+document.addEventListener("DOMContentLoaded",async () => {
+	let rides_txt = await fetch("/get/testing/get_rides")
+	let rides = await rides_txt.json()
+	for (let i = 0; i < rides.rides.length;i++) {
+
+	let elem= document.createElement("option")
+		elem.innerHTML = rides.rides[i]
+		if (rides.rides[i] == rides.chosen_ride) {
+			elem.selected = true
+		}
+		ride_dropdown.append(elem)
+	}
+
+
+
+})
 function fullScreenCanvas(canvas) {
 	canvas.width = window.innerWidth / 1.5
 
@@ -12,11 +49,6 @@ function clear_canvas(canvas, ctx) {
 }
 
 
-var socket = io();
-const canvas = document.getElementById("ips_canvas")
-const manual_scan_btn = document.getElementById("make_manual_scan_btn")
-const toggle_calibration_btn = document.getElementById("toggle_calibration_btn")
-const people_counter = document.getElementById("people_counter")
 
 const reset_receivers_btn = document.getElementById("reset_receivers_btn")
 
@@ -178,8 +210,8 @@ window.addEventListener("resize", () => {
 	draw_all()
 
 })
-socket.on("reception", (value) => {
-	let real_val = JSON.parse(value)
+socket.on("reception", async (value) => {
+	let real_val = await JSON.parse(value)
 	for (let i = 0; i < PIES.length; i++) {
 		let pie = PIES[i]
 		if (pie.name == real_val.host_name) {
