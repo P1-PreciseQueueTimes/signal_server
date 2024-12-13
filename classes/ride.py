@@ -1,3 +1,4 @@
+# Comment for Martin
 class Ride:
     def __init__(self, name, wait_time_minutes, people_per_ride):
         """
