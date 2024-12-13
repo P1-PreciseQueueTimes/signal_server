@@ -78,7 +78,7 @@ def handleReceiver():
             file.write("in_area, outside_area\n")
     if os.path.exists("test.csv"):
         with open("test.csv","a") as file:
-            file.write(f"{misc_elements.People_In_Area}, people_outside_area\n")
+            file.write(f"{misc_elements.People_In_Area}, {people_outside_area}\n")
 
     print(f"People in area: {misc_elements.People_In_Area}")
 
