@@ -34,7 +34,7 @@ def calculateLNS(locations, distances, initial_guess):
         })
     location = result.x
 
-    return location
+    return location.tolist()
 
 def calc_distance_reg(rssi):
     return math.exp(-0.1339046599*rssi+ 2.363818961)

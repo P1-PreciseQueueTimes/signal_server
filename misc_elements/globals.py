@@ -18,4 +18,6 @@ Tri_y_diff =[]
 
 CALIBRATION_MODE = True 
 
+People_In_Area = 0
+
 

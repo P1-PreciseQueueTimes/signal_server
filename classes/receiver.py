@@ -35,6 +35,6 @@ class Receiver:
     def GetRSSIMac(self,mac_adress):
         out = [signal for signal in self.signals if signal.mac_adress == mac_adress]    
 
-        return next(iter(out))
+        return out[0]
 
 

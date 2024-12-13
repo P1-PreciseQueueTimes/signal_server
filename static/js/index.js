@@ -16,7 +16,7 @@ var socket = io();
 const canvas = document.getElementById("ips_canvas")
 const manual_scan_btn = document.getElementById("make_manual_scan_btn")
 const toggle_calibration_btn = document.getElementById("toggle_calibration_btn")
-const people_counter 0 document.getElementById("people_counter")
+const people_counter = document.getElementById("people_counter")
 
 const reset_receivers_btn = document.getElementById("reset_receivers_btn")
 
