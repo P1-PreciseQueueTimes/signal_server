@@ -45,6 +45,7 @@ Vector(1400,400):[-25,-20,-24,-66,-17,-27,-58,-21,-22,-31,-25,-47,-58,-34,-27,-2
 Vector(200,600):[-23,-31,-36,-35,-58,-58,-58,-36,-33,-34,-34,-41,-32,-51,-35,-27,-31,-41,-31,-71,-47,-44,-44],
 Vector(600,100):[-58,-34,-31,-47,-32,-64,-34,-22,-58,-44]})
 """
+
 pi2=Points(Vector(600,1200),{Vector(600,400):[-25,-27,-27,-31,-31,-27,-31,-28,-29,-27,-27,-27,-25,-30,-28,-33,-32,-32,-33,-32,-39,-36,-37,-36],
 Vector(300,200):[-47,-36,-39,-58,-36,-36],Vector(1000,400):[-29],
 Vector(1400,400):[-51,-47,-40,-44,-45,-31,-34,-36,-44,-39,-37,-54,-44,-48,-45,-38,-41],
@@ -61,6 +62,7 @@ Vector(1400,400):[-25,-20,-24,-17,-27,-21,-22,-31,-25,-34,-27,-25,-25],
 Vector(200,600):[-23,-31,-36,-35,-36,-33,-34,-34,-32,-35,-27,-31,-31],
 Vector(600,100):[-34,-31,-32,-34,-22,]})
 
+
 #loc_val_dict={}
 loc_val_list=[Vector(600,400),Vector(300,200),Vector(1000,400),Vector(1400,400),Vector(200,600),Vector(600,100)]
 
@@ -70,47 +72,38 @@ def calc_range(vect1,vect2):
     return math.sqrt(xdiff**2+ydiff**2)
 
 
-
-
-print(pi2.RSSI_dict[Vector(600,400)])
-
-
-#testloc=3,4
-pi1=Vector(2,5)
-
-print(pi1.x)
-print(pi1.y)
-
 def distance_RSSI_list(pi):
     for point in loc_val_list: #runs through every sender_location
         distancee=calc_range(point,pi.position) #calculates distance from sender location and pi
         for RSSIi in pi.RSSI_dict[point]:#runs through every RSSI value of the pie at the current sender location
             pi.dist_RSSI.append([distancee,RSSIi])
-
-    
-
-            
-    return
+"""
+def distance_RSSI_list(pi): #average
+    for point in loc_val_list: #runs through every sender_location
+        distancee=calc_range(point,pi.position) #calculates distance from sender location and pi
+        pi.dist_RSSI.append([distancee,sum(pi.RSSI_dict[point])/len(pi.RSSI_dict[point])]) #takes average
+"""
 
 distance_RSSI_list(pi2)
 distance_RSSI_list(pi3)
 distance_RSSI_list(pi4)
 
-print("text")
-print(pi2.dist_RSSI[1])
-print("text2")
-print(pi2.dist_RSSI[8])
-print("endText")
-
-def graph():
-    return
-
-print(calc_range(Vector(0,0),Vector(2,2)))
-
 def calc_distance_reg(rssi):
     return math.exp(-0.1339046599*rssi+ 2.363818961)
-    
 
+def calc_RSSI_distance(distance):
+    rssi=-7.468*np.log(0.0940603237047770*distance)
+    return(rssi)
+
+lineY=[]
+lineX=np.arange(360,1470+1,1)
+for point in lineX:
+    lineY.append(calc_RSSI_distance(point))
+
+for i in range(len(lineX)):
+    plt.plot(lineX[i],lineY[i],marker="o", markersize=1, markeredgecolor="orange", markerfacecolor="orange")
+#def CalculateDistance(rssi, tx_power=39, n=2):
+#    return 10 ** ((tx_power - rssi) / (10 * n))
 
 for point in pi2.dist_RSSI:
     plt.plot(point[0],point[1],marker="o", markersize=5, markeredgecolor="red", markerfacecolor="red")
@@ -118,10 +111,14 @@ for point in pi3.dist_RSSI:
     plt.plot(point[0],point[1],marker="o", markersize=5, markeredgecolor="green", markerfacecolor="green")
 for point in pi4.dist_RSSI:
     plt.plot(point[0],point[1],marker="o", markersize=5, markeredgecolor="blue", markerfacecolor="blue")    
+ 
 
+
+#-7.468 log(0.0940603237047770 distance) #log is natural logerithm
 plt.xlabel("Distance [cm]")
 plt.ylabel("RSSI")
+plt.legend()
 plt.grid()
 plt.show()
-#plt.savefig('graphOfFreezer.PNG')
+
 
