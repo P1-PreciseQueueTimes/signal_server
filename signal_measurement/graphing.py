@@ -45,7 +45,7 @@ Vector(1400,400):[-25,-20,-24,-66,-17,-27,-58,-21,-22,-31,-25,-47,-58,-34,-27,-2
 Vector(200,600):[-23,-31,-36,-35,-58,-58,-58,-36,-33,-34,-34,-41,-32,-51,-35,-27,-31,-41,-31,-71,-47,-44,-44],
 Vector(600,100):[-58,-34,-31,-47,-32,-64,-34,-22,-58,-44]})
 """
-
+"""
 pi2=Points(Vector(600,1200),{Vector(600,400):[-25,-27,-27,-31,-31,-27,-31,-28,-29,-27,-27,-27,-25,-30,-28,-33,-32,-32,-33,-32,-39,-36,-37,-36],
 Vector(300,200):[-47,-36,-39,-58,-36,-36],Vector(1000,400):[-29],
 Vector(1400,400):[-51,-47,-40,-44,-45,-31,-34,-36,-44,-39,-37,-54,-44,-48,-45,-38,-41],
@@ -60,6 +60,22 @@ pi4=Points(Vector(1200,0),{Vector(600,400):[-34,-28,-24,-31,-25,-27,-25,-36,-26,
 Vector(300,200):[-23,-23,-23,-24,-32],Vector(1000,400):[-28],
 Vector(1400,400):[-25,-20,-24,-17,-27,-21,-22,-31,-25,-34,-27,-25,-25],
 Vector(200,600):[-23,-31,-36,-35,-36,-33,-34,-34,-32,-35,-27,-31,-31],
+Vector(600,100):[-34,-31,-32,-34,-22,]})
+"""
+pi2=Points(Vector(600,1200),{Vector(600,400):[-25,-27,-27,-31,-31,-27,-31,-28,-29,-27,-27,-27,-25,-30,-28,-33,-32,-32,-33,-32,-39,-36,-37,-36],
+Vector(300,200):[-36,-39,-36,-36],Vector(1000,400):[-29],
+Vector(1400,400):[-51,-47,-40,-44,-45,-31,-34,-36,-44,-39,-37,-54,-44,-48,-45,-38,-41],
+Vector(200,600):[-36,-38,-38,-38,-36,-33,-36,-36,-49,-43,-44,-40,-47,-46,-37,-38,-37,-36,-36,-52,-36,-36],
+Vector(600,100):[-36,-44,-46,-32,-36,-40,-36,-39]})#spids af trekant
+pi3=Points(Vector(0,0),{Vector(600,400):[-27,-31,-31,-25,-32,-36,-31,-28,-28,-35,-34,-28,-31,-34,-34,-38,-36,-32,-28,-34,-31,-35],
+Vector(300,200):[-25,-27,-24],Vector(1000,400):[-31],
+Vector(1400,400):[-34,-44,-32,-32,-34,-38,-36,-34,-36,-38,-38,-39,-38],
+Vector(200,600):[-25,-25,-23,-20,-31,-27,-27,-31,-33,-27,-21,-27,-21,-23,-27,-28,-27,-25,-25,-23,-25,-18],
+Vector(600,100):[-34,-29,-27,-31,-27,-24,-31,-28,-28,-27]})
+pi4=Points(Vector(1200,0),{Vector(600,400):[-34,-28,-24,-31,-25,-27,-25,-36,-26,-26,-31,-33,-36,-39,-31,-29,-31,-37,-32,-31,-23,-25],
+Vector(300,200):[-23,-23,-23,-24,-32],Vector(1000,400):[-28],
+Vector(1400,400):[-25,-20,-24,-27,-21,-22,-31,-25,-34,-27,-25,-25],
+Vector(200,600):[-31,-36,-35,-36,-33,-34,-34,-32,-35,-31,-31],
 Vector(600,100):[-34,-31,-32,-34,-22,]})
 
 
@@ -100,18 +116,22 @@ lineX=np.arange(360,1470+1,1)
 for point in lineX:
     lineY.append(calc_RSSI_distance(point))
 
-for i in range(len(lineX)):
-    plt.plot(lineX[i],lineY[i],marker="o", markersize=1, markeredgecolor="orange", markerfacecolor="orange")
+plt.plot(lineX,lineY,marker="o", markersize=1, markeredgecolor="orange", markerfacecolor="orange",label="approximate corrolation")
+
 #def CalculateDistance(rssi, tx_power=39, n=2):
 #    return 10 ** ((tx_power - rssi) / (10 * n))
 
 for point in pi2.dist_RSSI:
-    plt.plot(point[0],point[1],marker="o", markersize=5, markeredgecolor="red", markerfacecolor="red")
+    plt.plot(point[0],point[1],marker="o", markersize=9, markeredgecolor="red", markerfacecolor="red")
+#plt.plot(pi2.dist_RSSI[0],pi2.dist_RSSI[1],marker="o", markersize=5, markeredgecolor="red", markerfacecolor="red", label='pi2')
+
 for point in pi3.dist_RSSI:
-    plt.plot(point[0],point[1],marker="o", markersize=5, markeredgecolor="green", markerfacecolor="green")
+    plt.plot(point[0],point[1],marker="o", markersize=7, markeredgecolor="green", markerfacecolor="green")
+#plt.plot(pi2.dist_RSSI[0],pi2.dist_RSSI[1],marker="o", markersize=5, markeredgecolor="red", markerfacecolor="red", label='pi3')
+
 for point in pi4.dist_RSSI:
     plt.plot(point[0],point[1],marker="o", markersize=5, markeredgecolor="blue", markerfacecolor="blue")    
- 
+#plt.plot(pi2.dist_RSSI[0],pi2.dist_RSSI[1],marker="o", markersize=5, markeredgecolor="red", markerfacecolor="red", label='pi4')
 
 
 #-7.468 log(0.0940603237047770 distance) #log is natural logerithm
@@ -122,3 +142,9 @@ plt.grid()
 plt.show()
 
 
+for point in pi2.dist_RSSI:
+    print(f"{int(point[0])},{point[1]}")
+for point in pi3.dist_RSSI:
+    print(f"{int(point[0])},{point[1]}")
+for point in pi4.dist_RSSI:
+    print(f"{int(point[0])},{point[1]}")
