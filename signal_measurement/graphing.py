@@ -3,6 +3,19 @@ import numpy as np
 import math
 #not yet numbers at 600:400 and 300:200
 
+def Trilateration(points,distances):
+    x1, y1, d1 = points[0][0], points[0][1], distances[0] #array is 0=x, 1=y
+    x2, y2, d2 = points[1][0], points[1][1], distances[1]
+    x3, y3, d3 = points[2][0], points[2][1], distances[2]
+    A = 2 * (x2 - x1) ; B = 2 * (y2 - y1) 
+    C = d1 ** 2 - d2 ** 2 - x1 ** 2 + x2 ** 2 - y1 ** 2 + y2 ** 2
+    D = 2 * (x3 - x2) ; E = 2 * (y3 - y2)
+    F = d2 ** 2 - d3 ** 2 - x2 ** 2 + x3 ** 2 - y2 ** 2 + y3 ** 2
+    # Solve for x and y
+    x = (C * E - F * B) / (E * A - B * D)
+    y = (C * D - A * F) / (B * D - A * E)
+    return x, y 
+
 class Vector:
     def __init__(self,x,y):
         self.x=x
@@ -78,9 +91,26 @@ Vector(1400,400):[-25,-20,-24,-27,-21,-22,-31,-25,-34,-27,-25,-25],
 Vector(200,600):[-31,-36,-35,-36,-33,-34,-34,-32,-35,-31,-31],
 Vector(600,100):[-34,-31,-32,-34,-22,]})
 
-
-#loc_val_dict={}
 loc_val_list=[Vector(600,400),Vector(300,200),Vector(1000,400),Vector(1400,400),Vector(200,600),Vector(600,100)]
+
+def probability(pointArray):
+    toimes=0
+    countIN=0
+    for point in pointArray:
+        a=pi2.position
+        b=pi3.position
+        c=pi4.position
+        da=calc_distance_reg((pi2.RSSI_dict[point])[0])
+        db=calc_distance_reg((pi3.RSSI_dict[point])[0])
+        dc=calc_distance_reg((pi4.RSSI_dict[point])[0])
+        xy=Trilateration([[a.x,a.y],[b.x,b.y],[c.x,c.y]],[da,db,dc])
+        print(xy)
+        if xy[0]<400 and xy[0]>-200 and xy[0]<400 and xy[0]>-200:
+            countIN+=1
+        toimes+=1
+    procent=(countIN/toimes)*100
+    print(procent)
+    return procent
 
 def calc_range(vect1,vect2):
     xdiff=vect1.x-vect2.x
@@ -100,16 +130,18 @@ def distance_RSSI_list(pi): #average
         pi.dist_RSSI.append([distancee,sum(pi.RSSI_dict[point])/len(pi.RSSI_dict[point])]) #takes average
 """
 
-distance_RSSI_list(pi2)
-distance_RSSI_list(pi3)
-distance_RSSI_list(pi4)
-
 def calc_distance_reg(rssi):
-    return math.exp(-0.1339046599*rssi+ 2.363818961)
+    return math.exp(-0.1339046599*int(rssi)+ 2.363818961)
 
 def calc_RSSI_distance(distance):
     rssi=-7.468*np.log(0.0940603237047770*distance)
     return(rssi)
+
+probability(loc_val_list)
+
+distance_RSSI_list(pi2)
+distance_RSSI_list(pi3)
+distance_RSSI_list(pi4)
 
 lineY=[]
 lineX=np.arange(360,1470+1,1)
@@ -141,10 +173,11 @@ plt.legend()
 plt.grid()
 plt.show()
 
-
+"""
 for point in pi2.dist_RSSI:
     print(f"{int(point[0])},{point[1]}")
 for point in pi3.dist_RSSI:
     print(f"{int(point[0])},{point[1]}")
 for point in pi4.dist_RSSI:
     print(f"{int(point[0])},{point[1]}")
+"""
