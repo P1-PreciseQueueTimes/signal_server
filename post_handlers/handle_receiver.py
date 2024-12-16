@@ -11,6 +11,11 @@ import os
 
 
 def handleReceiver():
+    """
+    Handles whenever request from receivers whenever they receive a signal.
+    """
+
+    #Extract variables from request.
     current_time = time()
     request_data = request.get_json()
 
@@ -18,14 +23,15 @@ def handleReceiver():
     signal_strength = int(request_data["signal_strength"])
     mac_adress = request_data["mac_adress"]
 
+    #Creates a new signal and adds it to the receiver object.
     new_signal = Signal(rssi=signal_strength,time_received=current_time,mac_adress=mac_adress)
-
     this_receiver = [receiver for receiver in misc_elements.RECEIVERS if receiver.host_name == host_name][0]
-
     this_receiver.ReceivedSignal(new_signal)
 
+    #Removes signals which has not beeen updated the last 30 seconds.
     this_receiver.UpdateSignals(countdown=30)
 
+    #Calculates distance.
     distance = signal_measurement.calc_distance_reg(signal_strength)
 
     print("Host Name: {}\nMac adress: {}\nSignal Strength db:{}\nDistance: {}\n".format(
@@ -33,11 +39,8 @@ def handleReceiver():
     ))
 
     misc_elements.People_In_Area = 0
-
     people_outside_area = 0
-
     people_locations = [] 
-
     max_distance_from_center_cm = 850 + 1000
 
 
@@ -46,6 +49,7 @@ def handleReceiver():
 
         print([i.HasMac(signal.mac_adress) for i in misc_elements.RECEIVERS])
 
+        #Checks if all receivers contains the same mac adress. 
         for receiver in misc_elements.RECEIVERS:
             if not receiver.HasMac(signal.mac_adress):
                 all_receivers_has_mac = False 
@@ -54,15 +58,19 @@ def handleReceiver():
         if all_receivers_has_mac:
             print(f"Calculating for mac: {signal.mac_adress}\n")
 
+            #Gets the different distances from based upon the rssi value of the signal.
             distances = [signal_measurement.calc_distance_reg(receiver.GetRSSIMac(signal.mac_adress).rssi) for receiver in misc_elements.RECEIVERS] 
             locations = [receiver.cordinates for receiver in misc_elements.RECEIVERS]
 
+            #Inserts the codinates into trilateration function to get codinates.
             mac_cordinates = signal_measurement.lns(locations,distances)
             people_locations.append(mac_cordinates)
 
             [x_cord,y_cord] = mac_cordinates
 
             print(f"Mac: {signal.mac_adress}\nLocation: ({x_cord}, {y_cord})\n")
+
+            #Checks if calculated codinates are in a certain distance from the center of the measuring area.
 
             center_x = misc_elements.CENTER[0]
             center_y = misc_elements.CENTER[1]
@@ -73,6 +81,9 @@ def handleReceiver():
                 misc_elements.People_In_Area += 1
             else:
                 people_outside_area += 1
+
+    #Writes amount of people inside and outside circle to csv file. 
+
     if not os.path.exists("test.csv"):
         with open("test.csv","w") as file:
             file.write("in_area, outside_area\n")
@@ -84,7 +95,7 @@ def handleReceiver():
 
     print(f"People outside area: {people_outside_area}")
 
-
+    #Emits object containing relevant information to html page.
     out_obj = {"host_name": host_name, "distance": distance,"people":misc_elements.People_In_Area,"people_locations":people_locations}
     out_obj_str = json.dumps(out_obj)
     emit("reception", out_obj_str, broadcast=True, namespace="/")

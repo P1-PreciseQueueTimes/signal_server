@@ -2,6 +2,9 @@
 from flask import request
 
 def handleSender(): 
+    """
+    Handles whenever the sender sends out a signal.
+    """
     global sent_time
     request_data = request.get_json()
 

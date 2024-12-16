@@ -28,9 +28,3 @@ class Ride:
         queue_time = (people_in_queue / self.hourly_capacity) * 60  # Convert back to minutes
         return queue_time + 2  # Buffer time in minutes
 
-# Defining our Rides with their data so we can calculate Flow Rate
-rides = [
-    Ride(name="Dragekongen", wait_time_minutes=3.5, people_per_ride=28),
-    Ride(name="Piraten", wait_time_minutes=2.341463415, people_per_ride=32), 
-    Ride(name="Skatteøen", wait_time_minutes=3, people_per_ride=32)
-]

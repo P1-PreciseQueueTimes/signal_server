@@ -93,12 +93,12 @@ automatic_scan_btn.addEventListener("click", () => {
 })
 reset_receivers_btn.addEventListener("click", async () => {
 
-	relative_path = "/post/testing/reset_receivers"
+	relative_path = "/get/testing/reset_receivers"
 	const resp = await fetch(relative_path)
 })
 
 toggle_calibration_btn.addEventListener("click", async () => {
-	relative_path = "/post/testing/calibrate"
+	relative_path = "/get/testing/calibrate"
 
 	const resp = await fetch(relative_path)
 

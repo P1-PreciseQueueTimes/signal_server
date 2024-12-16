@@ -1,9 +1,10 @@
-from misc_elements import RECEIVERS
+import misc_elements
+import json
 
-def handleCalibration(host_name): 
-
-    difference_in_times = RECEIVERS[host_name]
-
-    average_difference = sum(difference_in_times)/len(difference_in_times)
-
-    return str(average_difference) 
+def handleCalibrate():
+    """
+    Handles whenever the calibration mode is changed in html.
+    """
+    misc_elements.CALIBRATION_MODE = not misc_elements.CALIBRATION_MODE
+    print(f"Set calibrate to {misc_elements.CALIBRATION_MODE}")
+    return json.dumps({"mode":misc_elements.CALIBRATION_MODE}) 
